@@ -1,0 +1,9 @@
+before sourcing, you need download the zip file and extract it to your working directory.
+Sourcing the run_analysis.R then you will get data.frame called tidydata which is my final tidy data set.
+
+column "Activity" indicated the data is collected from which of the 6 different activities
+(WALKING, WALKING_UPSTAIRS, WALKING_DOWNSTAIRS, SITTING, STANDING, LAYING).
+
+column "Subject" indicated the data is collected from which of the 30 different subjects.
+
+other columns give averge of corresponding data for different signals.
