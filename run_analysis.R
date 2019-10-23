@@ -18,7 +18,7 @@ colnames(testing_data)<- data_colnames
 whole_dataset<- rbind(testing_data,training_data)
 
 ### step 2
-selected_dataset<- whole_dataset[,grep("mean|std",data_colnames)]
+selected_dataset<- whole_dataset[,grep("mean|std|Mean|Std",data_colnames)]
 
 ### step 3 
 whole_dataset_label<- rbind(testing_data_label,training_data_label)
@@ -30,6 +30,21 @@ whole_dataset_label[,1]<- activities_label
 colnames(whole_dataset_label) <- "Activity"
 labeled_dataset<- cbind(selected_dataset,whole_dataset_label)
 
+names(labeled_dataset)<-gsub("Acc", "Accelerometer", names(labeled_dataset))
+names(labeled_dataset)<-gsub("Gyro", "Gyroscope", names(labeled_dataset))
+names(labeled_dataset)<-gsub("BodyBody", "Body", names(labeled_dataset))
+names(labeled_dataset)<-gsub("Mag", "Magnitude", names(labeled_dataset))
+names(labeled_dataset)<-gsub("^t", "Time", names(labeled_dataset))
+names(labeled_dataset)<-gsub("^f", "Frequency", names(labeled_dataset))
+names(labeled_dataset)<-gsub("tBody", "TimeBody", names(labeled_dataset))
+names(labeled_dataset)<-gsub("-mean()", "Mean", names(labeled_dataset), ignore.case = TRUE)
+names(labeled_dataset)<-gsub("-std()", "STD", names(labeled_dataset), ignore.case = TRUE)
+names(labeled_dataset)<-gsub("-freq()", "Frequency", names(labeled_dataset), ignore.case = TRUE)
+names(labeled_dataset)<-gsub("angle", "Angle", names(labeled_dataset))
+names(labeled_dataset)<-gsub("gravity", "Gravity", names(labeled_dataset))
+
+
+
 ### step 5 
 training_data_subject<- read.table("./getdata_projectfiles_UCI HAR Dataset/UCI HAR Dataset/train/subject_train.txt",header = FALSE)
 testing_data_subject<- read.table("./getdata_projectfiles_UCI HAR Dataset/UCI HAR Dataset/test/subject_test.txt",header = FALSE)
@@ -39,4 +54,7 @@ labeled_dataset<- cbind(labeled_dataset,whole_dataset_subject)
 
 tidydata<- labeled_dataset %>%
   group_by(Subject,Activity) %>%
-  summarize_all(mean)
+  summarise_all(funs(mean))
+
+### write table
+write.table(tidydata,file = "tidydataset.txt",row.name=FALSE)
